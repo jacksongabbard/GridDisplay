@@ -1,20 +1,24 @@
 (() => {
-  let tickCount = 0;
+  let globalTickCount = 0;
 
   function tick() {
-    console.log("Tick " + tickCount);
+    console.log("Tick " + globalTickCount);
 
-    for (let x = 0; x < 20; x++) {
+    let localTickCount = 0;
+    outerLoop: for (let x = 0; x < 20; x++) {
       for (let y = 0; y < 20; y++) {
-        if (tickCount % 2) {
-          window.setPixel(x, y, "green");
-        } else {
-          window.setPixel(x, y, "orange");
+        window.setPixel(x, y, "green");
+        localTickCount++;
+        if (localTickCount > globalTickCount) {
+          // Set the newest pixel to a light green so
+          // that there's a sort of fade transition
+          window.setPixel(x, y, "lightgreen");
+          break outerLoop;
         }
       }
     }
-    tickCount++;
+    globalTickCount++;
   }
 
-  setInterval(tick, 1000);
+  setInterval(tick, 1000 / 30);
 })();
